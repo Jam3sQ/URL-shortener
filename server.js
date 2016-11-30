@@ -30,12 +30,13 @@ app.get('/:link', function(req, res){
                 shortened: shortLink
             };
             
+            res.send(JSON.stringify(links)); 
+            
             var collection = db.collection('linksdb'); 
             collection.insert(links, function(err, data){
                 if (err) throw err;
             });
-            console.log("confirm");
-            
+           
             db.close(); 
     
         }); 
@@ -84,7 +85,8 @@ app.get('/database/test', function(req, res){
     })
 })
 
-app.get('/database/delete', function(req, res) {
+//Clear contents of database 
+app.get('/database/clear', function(req, res) {
     MongoClient.connect(url, function(err, db) {
         if(err) throw err;
         var collection = db.collection('linksdb'); 
