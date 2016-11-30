@@ -2,7 +2,7 @@ var express = require('express');
 var app = express(); 
 var isUrl = require('is-url-superb'); //Package to validate url *Note Https doesnt work 
 var MongoClient = require('mongodb').MongoClient;
-var url = 'mongodb://localhost:27017/url-shorten'; //url to connect to database 
+var url = 'mongodb://Jam3sQ:Pinecone1@ds115798.mlab.com:15798/url-shortener'; //url to connect to database 
 
 //Create port variable 
 var port = process.env.PORT || 8080; 
@@ -36,7 +36,6 @@ app.get('/:link', function(req, res){
             collection.insert(links, function(err, data){
                 if (err) throw err;
             });
-           
             db.close(); 
     
         }); 
@@ -60,9 +59,6 @@ app.get('/:link', function(req, res){
                     //Return JSON response 
                     console.log("Link not found")
                 }
-                
-                // console.log(data[0].original); 
-                
             }); 
             db.close(); 
         }); 
@@ -93,4 +89,5 @@ app.get('/database/clear', function(req, res) {
         collection.remove(); 
     })
 })
+
 app.listen(port); 
