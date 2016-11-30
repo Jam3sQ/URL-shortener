@@ -2,6 +2,7 @@ var express = require('express');
 var app = express(); 
 var isUrl = require('is-url-superb'); //Package to validate url *Note Https doesnt work 
 var MongoClient = require('mongodb').MongoClient;
+var url = 'mongodb://localhost:27017/url-shorten'; //url to connect to database 
 
 //Create port variable 
 var port = process.env.PORT || 8080; 
@@ -22,7 +23,7 @@ app.get('/:link', function(req, res){
         var shortLink = Math.floor(1000 + Math.random() * 9000);
 
         //store it using mongodb 
-        MongoClient.connect('mongodb://localhost:27017/url-shorten', function(err, db) {
+        MongoClient.connect(url, function(err, db) {
             if (err) throw err; 
             var links = {
                 original: req.params.link, 
@@ -40,13 +41,40 @@ app.get('/:link', function(req, res){
         }); 
       
     }
+    
+    //Create else if to see if parameter is a four digit number 
+    else if (req.params.link >= 1000 && req.params.link < 10000){
+        MongoClient.connect(url, function(err, db){
+            if(err)throw err; 
+            var collection = db.collection('linksdb'); 
+            collection.find({shortened:Number(req.params.link)}).toArray(function(err, data){
+                if(err) throw err; 
+                
+                //Look in the database to see if the 4 digit number is a shortened link
+                if (data.length > 0){
+                    //if it is then redirect to original link
+                    res.redirect('http://' + data[0].original); 
+                }
+                else {
+                    //Return JSON response 
+                    console.log("Link not found")
+                }
+                
+                // console.log(data[0].original); 
+                
+            }); 
+            db.close(); 
+        }); 
+    }
+    
     else {
         console.log("Invalid url");
     }
 })
 
+//Check database contents 
 app.get('/test/database', function(req, res){
-    MongoClient.connect('mongodb://localhost:27017/url-shorten', function(err, db){
+    MongoClient.connect(url, function(err, db){
         if(err) throw err; 
         var collection = db.collection('linksdb'); 
         collection.find().toArray(function(err, data){
