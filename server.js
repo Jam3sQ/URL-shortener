@@ -73,7 +73,7 @@ app.get('/:link', function(req, res){
 })
 
 //Check database contents 
-app.get('/test/database', function(req, res){
+app.get('/database/test', function(req, res){
     MongoClient.connect(url, function(err, db){
         if(err) throw err; 
         var collection = db.collection('linksdb'); 
@@ -81,6 +81,14 @@ app.get('/test/database', function(req, res){
             if (err) throw err; 
             console.log(JSON.stringify(data)); 
         });
+    })
+})
+
+app.get('/database/delete', function(req, res) {
+    MongoClient.connect(url, function(err, db) {
+        if(err) throw err;
+        var collection = db.collection('linksdb'); 
+        collection.remove(); 
     })
 })
 app.listen(port); 
