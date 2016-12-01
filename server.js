@@ -65,7 +65,7 @@ app.get('/:link', function(req, res){
     }
     
     else {
-        console.log("Invalid url");
+        res.send("This is not a url in the database"); 
     }
 })
 
@@ -76,7 +76,7 @@ app.get('/database/test', function(req, res){
         var collection = db.collection('linksdb'); 
         collection.find().toArray(function(err, data){
             if (err) throw err; 
-            console.log(JSON.stringify(data)); 
+            res.send(JSON.stringify(data))
         });
     })
 })
@@ -87,6 +87,7 @@ app.get('/database/clear', function(req, res) {
         if(err) throw err;
         var collection = db.collection('linksdb'); 
         collection.remove(); 
+        res.send("Links cleared!");
     })
 })
 
