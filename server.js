@@ -1,8 +1,10 @@
+'use strict'; 
+
 var express = require('express'); 
 var app = express(); 
 var isUrl = require('is-url-superb'); //Package to validate url *Note Https doesnt work 
 var MongoClient = require('mongodb').MongoClient;
-var url = 'mongodb://Jam3sQ:Pinecone1@ds115798.mlab.com:15798/heroku_n2wwm54z'; //url to connect to database 
+var url = process.env.MONGOLAB_URI ||'mongodb://Jam3sQ:Pinecone1@ds115798.mlab.com:15798/heroku_n2wwm54z'; //url to connect to database 
 
 //Create port variable 
 var port = process.env.PORT || 8080; 
